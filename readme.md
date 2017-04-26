@@ -2,7 +2,7 @@
 
 I had the need to build a way to comfortably select images in an Omero web app I created (or at least more comfortably than knowing the id). This project aims to provide just that functionality.
 
-![alt text](https://raw.github.com/FrankT1983/omero-web-image-picker/blob/master/exampleImage.JPG)
+![alt text](https://raw.githubusercontent.com/FrankT1983/omero-web-image-picker/master/exampleImage.JPG)
 
 ## Overview
 
