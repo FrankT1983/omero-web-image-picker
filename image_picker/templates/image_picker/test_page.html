@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Image Picker Test</title>
+</head>
+
+{% load staticfiles %}
+{% csrf_token %}
+
+<style>
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    top:100%;
+    left: 100%;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+</style>
+
+
+<body>
+<h1>Image Picker</h1>
+
+
+
+<script src="{% static 'image_picker/jquery-3.1.0.js' %}"></script>
+<link rel="stylesheet" href="{% static 'image_picker/themes/default/style.min.css' %}">
+<script src="{% static 'image_picker/jstree.min.js' %}"></script>
+
+<script src="{% static 'image_picker/ImagePicker.js' %}"></script>
+
+<script>
+hierarchy_json = "{}"
+{% if full_hierarchy %}
+hierarchy_json="{{full_hierarchy|escapejs}}"
+{% endif %}
+hierarchy = JSON.parse(hierarchy_json)
+
+groupIcon = "{% static 'image_picker/images/group_green16.png' %}"
+datasetIcon = "{% static 'image_picker/images/folder_image16.png' %}"
+imageIcon = "{% static 'image_picker/images/image_16.png' %}"
+</script>
+    <div class="popup" >
+        <table>
+              <tr>
+                <td>
+                    Dataset ID <input type="text" id="idInput">
+                  </td>
+                <td>
+                    <div id="popupContainer" class="demo"></div>
+                    <button id="popupButton"> pick</button>
+                </td>
+                <script>
+                    ConstructSelectionPopup($('#popupContainer')[0], $('#popupButton')[0] , $('#idInput')[0], hierarchy.data ,  "dataset" , '{% url 'getThumbAddress' imageId='9999999999' %}')
+                </script>
+             </tr>
+
+             <tr>
+                <td>
+                    Image ID <input type="text" id="idInput2">
+                  </td>
+                <td>
+                    <div id="popupContainer2" class="demo"></div>
+                    <button id="popupButton2"> pick</button>
+                </td>
+                <script>
+                    ConstructSelectionPopup($('#popupContainer2')[0], $('#popupButton2')[0] , $('#idInput2')[0], hierarchy.data, "image" , '{% url 'getThumbAddress' imageId='9999999999' %}')
+                </script>
+             </tr>
+        </table>
+    </div>
+</body>
+</html>
