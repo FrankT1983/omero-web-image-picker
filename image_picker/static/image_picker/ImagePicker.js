@@ -22,7 +22,7 @@ function ConstructSelectionPopup(selectElement, triggerPopup , targetInput, data
 {
 	convertedForJsTree = {}
 	childrend = getChildren(data)
-    convertedForJsTree = { "text" : "root" , "children" : childrend}
+    convertedForJsTree = { "text" : "Omero" , "children" : childrend}
 
     var popupContainer = document.createElement('div');
     popupContainer.className += " popuptext";
