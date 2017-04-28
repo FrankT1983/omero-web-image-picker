@@ -18,6 +18,26 @@ function getChildren(data)
     return res
 }
 
+function ConstructSelectionPopupOnBody(name ,triggerPopup , targetInput, data, selectionType ,thumbUrl)
+{
+    var xOffset = 10;
+    var yOffset = 30;
+    $("body").append("<div id='"+ name +"' class='popup'></div>");
+    var elementName= "#"+name+"";
+    $(elementName).css("top",(mouse_y - xOffset) + "px")
+                                  .css("left",(mouse_x + yOffset) + "px")
+                                  .css("position", "absolute")
+                                  .css("z-index", "30")
+                                  .fadeIn("fast");
+    ConstructSelectionPopup( $(elementName)[0], triggerPopup , targetInput, data, selectionType ,thumbUrl)
+
+    $(triggerPopup).click(function()
+    {
+          $(elementName).css("top",(mouse_y - xOffset) + "px")
+                        .css("left",(mouse_x + yOffset) + "px")
+    });
+}
+
 function ConstructSelectionPopup(selectElement, triggerPopup , targetInput, data, selectionType ,thumbUrl)
 {
 	convertedForJsTree = {}
@@ -43,44 +63,45 @@ function ConstructSelectionPopup(selectElement, triggerPopup , targetInput, data
 		"plugins" : [ "types" ]
 	});
 
-	$(popupContainer).on("select_node.jstree",
-        function(evt, data){
-            if (data.node.type == selectionType)
+	$(popupContainer)
+	    .on("select_node.jstree",
+            function(evt, data){
+                if (data.node.type == selectionType)
+                {
+                    var id = data.node.data
+                    targetInput.value = id
+                    togglePopUp(popupContainer);
+                }
+            })
+        .on('dehover_node.jstree', function() {$("#preview").remove();})
+        .bind("hover_node.jstree", function(e, data)
             {
+
                 var id = data.node.data
-                targetInput.value = id
-                togglePopUp(popupContainer);
-            }
-         });
-    $(popupContainer).on('dehover_node.jstree', function() {$("#preview").remove();});
-    $(popupContainer).bind("hover_node.jstree", function(e, data)
-        {
+                if (data.node.type == "image")
+                {
+                    var url = thumbUrl
+                    url = url.replace('9999999999',id)
+                    bound = e.currentTarget.getBoundingClientRect()
 
-            var id = data.node.data
-            if (data.node.type == "image")
-            {
-                var url = thumbUrl
-                url = url.replace('9999999999',id)
-                bound = e.currentTarget.getBoundingClientRect()
-
-                $.ajax({
-                    url : url,
-                     dataType: 'text',
-                     async: false,
-                     success: function(previewUrl) {
-                           $("body").append("<p id='preview'><img class='ImagePreview' src="+previewUrl+"></p>");
-                           xOffset = 10;
-		                   yOffset = 30;
-                           $("#preview")
-                             .css("top",(mouse_y - xOffset) + "px")
-                              .css("left",(mouse_x + yOffset) + "px")
-                              .css("position", "absolute")
-                              .css("z-index", "30")
-                              .fadeIn("fast");
-                    }
-                });
-            }
-        })
+                    $.ajax({
+                        url : url,
+                         dataType: 'text',
+                         async: false,
+                         success: function(previewUrl) {
+                               $("body").append("<p id='preview'><img class='ImagePreview' src="+previewUrl+"></p>");
+                               xOffset = 10;
+                               yOffset = 30;
+                               $("#preview")
+                                  .css("top",(mouse_y - xOffset) + "px")
+                                  .css("left",(mouse_x + yOffset) + "px")
+                                  .css("position", "absolute")
+                                  .css("z-index", "30")
+                                  .fadeIn("fast");
+                        }
+                    });
+                }
+            })
 
     $(triggerPopup).click(function() {
         togglePopUp(popupContainer);
